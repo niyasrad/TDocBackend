@@ -9,6 +9,11 @@ const app = express();
 app.use(express.json());
 app.use(cors())
 
+app.get('/', async(req, res) => {
+    res.status(200).json({
+        message: "Server Running!"
+    });
+})
 app.get('/tasks', async (req, res) => {
     const query = {}
     if (req.query.tags) {
