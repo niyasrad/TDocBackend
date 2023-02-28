@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-// Each task has a title, description, task assigned, due date, task priority, and tags.
 const Tasks = mongoose.Schema({
     title: String,
     description: String,
@@ -12,7 +11,11 @@ const Tasks = mongoose.Schema({
         enum: ['HIGH', 'LOW'],
         default: 'LOW'
     },
-    tags: [String]
+    tags: [String],
+    done: {
+        type: Boolean,
+        default: false
+    }
 })
 
 module.exports = mongoose.model("Task", Tasks);
