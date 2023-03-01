@@ -95,7 +95,7 @@ router.post('/create', async (req, res) => {
 router.post('/delete', async (req, res) => {
     try {
         const userFind = await user.findOne({
-            authToken: req.query.token
+            authToken: req.body.token
         })
         if (!user) {
             return res.status(400).json({
