@@ -97,36 +97,37 @@ router.post('/delete', async (req, res) => {
         const userFind = await user.findOne({
             authToken: req.body.token
         })
-        if (!user) {
+        if (!userFind) {
             return res.status(400).json({
                 message: "Invalid Task"
             })
         }
+        if (!req.body._id) {
+            return res.status(400).json({
+                message: "Invalid ID"
+            })
+        }
+        const task = await Task.findOne({
+            _id: req.body._id,
+            accountid: userFind._id
+        });
+        if (!task) {
+            return res.status(400).json({
+                message: "Invalid ID"
+            })
+        }
+        task.done = true;
+        await task.save();
+        return res.status(200).json({
+            message: "Done Successfully!"
+        })
     } catch (err) {
         console.log(err);
         return res.status(400).json({
             message: "Invalid Task"
         })
     }
-    if (!req.body._id) {
-        return res.status(400).json({
-            message: "Invalid ID"
-        })
-    }
-    const task = await Task.find({
-        _id: req.body._id,
-        accountid: userFind.accountid
-    });
-    if (!task) {
-        return res.status(400).json({
-            message: "Invalid ID"
-        })
-    }
-    task.done = true;
-    await task.save();
-    return res.status(200).json({
-        message: "Done Successfully!"
-    })
+    
 })
 
 module.exports = router;
