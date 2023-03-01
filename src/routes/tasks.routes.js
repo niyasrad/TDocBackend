@@ -63,14 +63,13 @@ router.get('/list', async (req, res) => {
 router.post('/create', async (req, res) => {
     try {
         const userFind = await user.findOne({
-            authToken: req.query.token
+            authToken: req.body.token
         })
         if (!userFind) {
             return res.status(400).json({
                 message: "Invalid User"
             })
         }
-        console.log(userFind)
         const newTask = new Task({
             title: req.body.title,
             description: req.body.description,
