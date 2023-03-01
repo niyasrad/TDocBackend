@@ -9,13 +9,12 @@ const authMiddleware = require('./src/util/auth');
 const app = express();
 combineMiddleware(app);
 combineRoutes(app);
-
+app.use(authMiddleware);
 app.get('/', async(req, res) => {
     res.status(200).json({
         message: "Server Running!"
     });
 })
-app.use(authMiddleware);
 
 const PORT = process.env.PORT || 8080;
 
