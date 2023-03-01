@@ -3,18 +3,19 @@ require('dotenv').config()
 const express = require('express');
 const mongoose = require('mongoose');
 const combineRoutes = require('./src/routes');
-const combineMiddleware = require('./src/util')
+const combineMiddleware = require('./src/util');
+const authMiddleware = require('./src/util/auth');
 
 const app = express();
 combineMiddleware(app);
 combineRoutes(app);
-
 
 app.get('/', async(req, res) => {
     res.status(200).json({
         message: "Server Running!"
     });
 })
+app.use(authMiddleware);
 
 const PORT = process.env.PORT || 8080;
 
