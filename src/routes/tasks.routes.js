@@ -5,42 +5,42 @@ const user = require('../models/user');
 router.get('/list', async (req, res) => {
     try {
         const userFind = await user.findOne({
-            authToken: req.query.token
+            authToken: req.body.token
         })
         if (!userFind) {
             return res.status(400).json({
                 message: "Invalid User!"
             })
         }
-        console.log(req.query)
+        console.log(req.body)
         const query = {}
-        if (req.query.tags) {
+        if (req.body.tags) {
             query.tags = {
-                $regex: req.query.tags,
+                $regex: req.body.tags,
                 $options: "i"
             }
         }
-        if (req.query.task) {
+        if (req.body.task) {
             query.task = {
-                $regex: req.query.task,
+                $regex: req.body.task,
                 $options: "i"
             }
         }
-        if (req.query.assignees) {
-            const assigneeRegex = new RegExp(req.query.assignees, 'i');
+        if (req.body.assignees) {
+            const assigneeRegex = new RegExp(req.body.assignees, 'i');
             query.assignees = { $regex: assigneeRegex };
         }
-        if (req.query.due) {
-            const startOfDay = new Date(req.query.due);
+        if (req.body.due) {
+            const startOfDay = new Date(req.body.due);
             startOfDay.setHours(0, 0, 0, 0);
-            const endOfDay = new Date(req.query.due);
+            const endOfDay = new Date(req.body.due);
             endOfDay.setHours(23, 59, 59, 999);
             query.due = {
                 $gte: startOfDay,
                 $lte: endOfDay
             }
         }
-        if (req.query.done === true) {
+        if (req.body.done === true) {
             query.done = true;
         } else {
             query.done = false;
