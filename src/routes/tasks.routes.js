@@ -2,7 +2,7 @@ const router = require('express').Router();
 const Task = require('../models/task');
 const user = require('../models/user');
 
-router.get('/list', async (req, res) => {
+router.post('/list', async (req, res) => {
     try {
         const userFind = await user.findOne({
             authToken: req.body.token
@@ -12,7 +12,6 @@ router.get('/list', async (req, res) => {
                 message: "Invalid User!"
             })
         }
-        console.log(req.body)
         const query = {}
         if (req.body.tags) {
             query.tags = {
@@ -46,9 +45,7 @@ router.get('/list', async (req, res) => {
             query.done = false;
         }
         query.accountid = userFind._id;
-        console.log(query)
         const tasks = await Task.find(query);
-        console.log(tasks)
         return res.status(200).json({
             tasks
         })
