@@ -1,13 +1,17 @@
 const router = require('express').Router();
 const mongoose = require('mongoose');
 const User = require('../models/user');
+const bcrypt = require('bcrypt');
 
 router.post('/create', async(req, res) => {
     try {
+        if (!req.body.password) return res.status(400).json({message: "Enter Password!"});
+        const genSalt = await bcrypt.genSalt(10);
+        const hashedPass = await bcrypt.hash(req.body.password, genSalt) 
         const user = new User({
             email: req.body.email,
             username: req.body.username,
-            password: req.body.password
+            password: hashedPass
         })
         await user.save();
         const token = await user.generateAuthToken();
@@ -42,7 +46,8 @@ router.post('/login', async (req, res) => {
                 message: "Invalid Credentials!"
             })
         }
-        if (user.password !== req.body.password) {
+        const authUser = await bcrypt.compare(req.body.password, user.password);
+        if (!authUser) {
             return res.status(400).json({
                 message: "Invalid Credentials!"
             })

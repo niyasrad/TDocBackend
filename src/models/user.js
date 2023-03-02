@@ -22,14 +22,9 @@ const userSchema = mongoose.Schema({
 })
 
 userSchema.methods.generateAuthToken = async function() {
-    this.authToken = undefined;
-    await this.save();
-
     const token = jwt.sign({ _id: this._id }, process.env.JWT_SECRET , { expiresIn: '1h' });
-    console.log("This",this)
     this.authToken = token;
     await this.save();
-    console.log("This",this)
     return token;
 }
 
