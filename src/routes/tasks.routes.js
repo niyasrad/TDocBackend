@@ -13,21 +13,11 @@ router.post('/list', async (req, res) => {
             })
         }
         const query = {}
-        if (req.body.tags) {
-            query.tags = {
-                $regex: req.body.tags,
-                $options: "i"
-            }
-        }
         if (req.body.task) {
             query.task = {
                 $regex: req.body.task,
                 $options: "i"
             }
-        }
-        if (req.body.assignees) {
-            const assigneeRegex = new RegExp(req.body.assignees, 'i');
-            query.assignees = { $regex: assigneeRegex };
         }
         if (req.body.due) {
             const startOfDay = new Date(req.body.due);
@@ -45,7 +35,20 @@ router.post('/list', async (req, res) => {
             query.done = false;
         }
         query.accountid = userFind._id;
-        const tasks = await Task.find(query);
+        const tasks = await Task.aggregate([
+            {
+                $match: query
+            },
+            {
+                $group: { _id: "$category", tasks: { $push: '$$ROOT' }}
+            },
+            {
+                $project: { _id: 0, category:"$_id", tasks: 1}
+            },
+            {
+                $sort: { category: 1 }
+            }
+        ])
         return res.status(200).json({
             tasks
         })
@@ -70,11 +73,10 @@ router.post('/create', async (req, res) => {
         const newTask = new Task({
             title: req.body.title,
             description: req.body.description,
-            assignees: req.body.assignees,
             task: req.body.task,
             due: req.body.due,
             priority: req.body.priority,
-            tags: req.body.tags,
+            category: req.body.category,
             accountid: userFind._id
         })
         await newTask.save()

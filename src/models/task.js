@@ -7,7 +7,6 @@ const taskSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: true
     },
-    assignees: [String],
     task: String,
     due: Date,
     priority: {
@@ -15,7 +14,7 @@ const taskSchema = mongoose.Schema({
         enum: ['HIGH', 'LOW'],
         default: 'LOW'
     },
-    tags: [String],
+    category: String,
     done: {
         type: Boolean,
         default: false
