@@ -18,6 +18,11 @@ const taskSchema = mongoose.Schema({
     done: {
         type: Boolean,
         default: false
+    },
+    bogus: {
+        type: Boolean,
+        default: false,
+        required: false
     }
 })
 
