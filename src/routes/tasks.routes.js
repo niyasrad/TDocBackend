@@ -73,7 +73,7 @@ router.post('/list', async (req, res) => {
         query.accountid = userFind._id;
         const tasks = await Task.aggregate([
             {
-                $match: { $or: [ query, { bogus: true } ] }
+                $match: { $or: [ query, { bogus: true, accountid: userFind._id } ] }
             },
             {
                 $group: { _id: "$category", tasks: { $push: '$$ROOT' }}
