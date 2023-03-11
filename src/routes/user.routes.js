@@ -46,7 +46,8 @@ router.post('/create', async(req, res) => {
                 due: task.due,
                 priority: task.priority,
                 category: task.category,
-                accountid: user._id
+                accountid: user._id,
+                bogus: true
             })
             await newTask.save()
         })
