@@ -52,7 +52,8 @@ router.post('/create', async(req, res) => {
         })
         return res.status(200).json({
             token: token,
-            accountid: user._id
+            accountid: user._id,
+            username: user.username
         }) 
     } catch (err) {
         if (err instanceof mongoose.Error.ValidationError) {
@@ -90,6 +91,7 @@ router.post('/login', async (req, res) => {
         const token = await user.generateAuthToken()
         return res.status(200).json({
             login: true,
+            username: user.username,
             token: token,
         })
     } catch(err) {
