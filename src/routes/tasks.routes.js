@@ -29,6 +29,9 @@ router.post('/list', async (req, res) => {
                 $lte: endOfDay
             }
         }
+        if (req.body.priority) {
+            query.priority = req.body.priority;
+        }
         if (req.body.done === true) {
             query.done = true;
         } else {
