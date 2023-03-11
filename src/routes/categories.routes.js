@@ -60,4 +60,28 @@ router.post('/delete', async (req, res) => {
         })
     }
 })
+
+router.post('/rename', async (req, res) => {
+    try {
+        const userFind =  await User.findOne({ 
+            authToken: req.headers.authorization.split(' ')[1]
+        })
+    
+        if (!userFind) {
+            return res.status(400).json({
+                message: "Invalid User!"
+            })
+        }
+        await Task.updateMany({ category: req.body.category, accountid: userFind._id }, { category: req.body.newCategory })
+        return res.status(200).json({
+            message: "Updated Category!"
+        })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "Invalid Credentials!"
+        })
+    }
+    
+})
 module.exports = router;
