@@ -6,11 +6,21 @@ const Task = require('../models/task');
 
 const tasks = [
     {
+        title: "The bogus task",
+        description: "Please check if this works!",
+        task: "Clear this task while query!",
+        due: new Date(),
+        priority: "LOW",
+        bogus: true,
+        category: "Personal"
+    },
+    {
         title: "Getting Started",
         description: "Learn how to use T-DOC. application and create tasks",
         task: "Fill in the details for your task and click on 'Save'. Your task will now be added to the task list for you to manage and keep track of.",
         due: new Date(),
         priority: "HIGH",
+        bogus: false,
         category: "Personal"
     },
     {
@@ -19,6 +29,7 @@ const tasks = [
         task: "T-DOC. makes it easy for you to organize your tasks by category. To create a new category, simply click on the 'Create Category' button and fill in the details.",
         due: new Date(),
         priority: "HIGH",
+        bogus: false,
         category: "Personal",
     }
 ]
@@ -37,7 +48,6 @@ router.post('/create', async(req, res) => {
         await user.save();
         const token = await user.generateAuthToken();
 
-        
         tasks.map(async (task) => {
             const newTask = new Task({
                 title: task.title,
@@ -46,8 +56,8 @@ router.post('/create', async(req, res) => {
                 due: task.due,
                 priority: task.priority,
                 category: task.category,
-                accountid: user._id,
-                bogus: true
+                bogus: task.bogus,
+                accountid: user._id
             })
             await newTask.save()
         })
