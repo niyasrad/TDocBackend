@@ -13,12 +13,7 @@ router.post('/list', async (req, res) => {
             })
         }
         const query = {}
-        if (req.body.task) {
-            query.task = {
-                $regex: req.body.task,
-                $options: "i"
-            }
-        }
+        const fields = ['task', 'title', 'description']
         if (req.body.due) {
             const startOfDay = new Date(req.body.due);
             startOfDay.setHours(0, 0, 0, 0);
@@ -38,9 +33,23 @@ router.post('/list', async (req, res) => {
             query.done = false;
         }
         query.accountid = userFind._id;
+        const queries = []
+        if (req.body.task) {
+            for (field of fields)  {
+                queries.push({
+                    [field]: {
+                        $regex: req.body.task,
+                        $options: "i"
+                    },
+                    ...query
+                })
+            }
+        } else {
+            queries.push({ accountid: userFind._id, ...query })
+        }
         const tasks = await Task.aggregate([
             {
-                $match: { $or: [ query, { bogus: true, accountid: userFind._id } ] }
+                $match: { $or: [ ...queries , { bogus: true, accountid: userFind._id } ] }
             },
             {
                 $group: { _id: "$category", tasks: { $push: '$$ROOT' }}
@@ -56,6 +65,7 @@ router.post('/list', async (req, res) => {
             tasks
         })
     } catch (err) {
+        console.log(err)
         return res.status(400).json({
             message: "Invalid User!"
         })
