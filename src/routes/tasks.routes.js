@@ -5,10 +5,10 @@ const user = require('../models/user');
 router.post('/list', async (req, res) => {
     try {
         const userFind = await user.findOne({
-            authToken: req.body.token
+            authToken:  req.headers.authorization.split(' ')[1]
         })
         if (!userFind) {
-            return res.status(400).json({
+            return res.status(401).json({
                 message: "Invalid User!"
             })
         }
@@ -66,7 +66,7 @@ router.post('/list', async (req, res) => {
         })
     } catch (err) {
         console.log(err)
-        return res.status(400).json({
+        return res.status(401).json({
             message: "Invalid User!"
         })
     }
@@ -76,10 +76,10 @@ router.post('/list', async (req, res) => {
 router.post('/create', async (req, res) => {
     try {
         const userFind = await user.findOne({
-            authToken: req.body.token
+            authToken: req.headers.authorization.split(' ')[1]
         })
         if (!userFind) {
-            return res.status(400).json({
+            return res.status(401).json({
                 message: "Invalid User"
             })
         }
@@ -107,11 +107,11 @@ router.post('/create', async (req, res) => {
 router.post('/delete', async (req, res) => {
     try {
         const userFind = await user.findOne({
-            authToken: req.body.token
+            authToken: req.headers.authorization.split(' ')[1]
         })
         if (!userFind) {
-            return res.status(400).json({
-                message: "Invalid Task"
+            return res.status(401).json({
+                message: "Invalid User!"
             })
         }
         if (!req.body._id) {

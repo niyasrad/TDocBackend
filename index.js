@@ -14,7 +14,7 @@ combineRoutes(app);
 
 app.use(authMiddleware);
 app.get('/', async(req, res) => {
-    res.status(200).json({
+    return res.status(200).json({
         username: req.user.username
     });
 })

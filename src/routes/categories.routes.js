@@ -9,7 +9,7 @@ router.post('/create', async (req, res) => {
             authToken: req.headers.authorization.split(' ')[1]
         })
         if (!userFind) {
-            return res.status(400).json({
+            return res.status(401).json({
                 message: "Invalid User!"
             })
         }
@@ -45,7 +45,7 @@ router.post('/delete', async (req, res) => {
             authToken: req.headers.authorization.split(' ')[1]
         })
         if (!userFind) {
-            return res.status(400).json({
+            return res.status(401).json({
                 message: "Invalid User!"
             })
         }
@@ -68,7 +68,7 @@ router.post('/rename', async (req, res) => {
         })
     
         if (!userFind) {
-            return res.status(400).json({
+            return res.status(401).json({
                 message: "Invalid User!"
             })
         }

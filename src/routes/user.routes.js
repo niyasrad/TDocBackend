@@ -37,7 +37,7 @@ const tasks = [
 
 router.post('/create', async(req, res) => {
     try {
-        if (!req.body.password) return res.status(400).json({message: "Enter Password!"});
+        if (!req.body.password) return res.status(401).json({message: "Enter Password!"});
         const genSalt = await bcrypt.genSalt(10);
         const hashedPass = await bcrypt.hash(req.body.password, genSalt) 
         const user = new User({
@@ -68,7 +68,7 @@ router.post('/create', async(req, res) => {
         }) 
     } catch (err) {
         if (err instanceof mongoose.Error.ValidationError) {
-            return res.status(400).json({
+            return res.status(401).json({
                 message: "Please check your credentials!"
             })
         } else if (err.code === 11000 && err.keyPattern.username === 1) {
@@ -89,13 +89,13 @@ router.post('/login', async (req, res) => {
             $or: [{ email: req.body.emailOrUsername }, { username: req.body.emailOrUsername}]
         })
         if (!user) {
-            return res.status(400).json({
+            return res.status(401).json({
                 message: "Invalid Credentials!"
             })
         }
         const authUser = await bcrypt.compare(req.body.password, user.password);
         if (!authUser) {
-            return res.status(400).json({
+            return res.status(401).json({
                 message: "Invalid Credentials!"
             })
         }
@@ -107,7 +107,7 @@ router.post('/login', async (req, res) => {
         })
     } catch(err) {
         if (err instanceof mongoose.Error.ValidationError) {
-            return res.status(400).json({
+            return res.status(401).json({
                 message: "Please check your credentials!"
             })
         }
