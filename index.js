@@ -31,16 +31,19 @@ app.get('/', async(req, res) => {
 const Task = require('./src/models/task')
 const User = require('./src/models/user')
 
-
+console.log(process.env.EMAIL)
+console.log(process.env.PPWORD)
 const transporter = nodemailer.createTransport({
     service: 'hotmail', 
     auth : {
         user: process.env.EMAIL,
         pass: process.env.PPWORD
-    }
+    },
+    maxConnections: 5,
+    rateLimit: 5000, 
 })
 
-cron.schedule('0 0 * * *', async () => {
+cron.schedule('*/5 * * * *', async () => {
     console.log('---------------------');
     console.log('Running Cron Process');
 
@@ -53,28 +56,27 @@ cron.schedule('0 0 * * *', async () => {
         },
         {
             $project: { _id: 0, accountid:"$_id", tasks: 1 }
-        },
-        {
-            $sort: { accountid: 1 }
         }
     ])
     for (accounts of onDueTasks) {
         let user = await User.findById(accounts.accountid)
         if (user){
             console.log(user)
-            transporter.sendMail({
-                from: {
-                    name: 'TDOC - Niyas',
-                    address: process.env.EMAIL,
-                },
-                to: user.email,
-                subject: `Tasks Due for ${user.username}`,
-                text: 'T-Doc Tasks Notification', 
-                html: `<h1>Tasks Due: ${accounts.tasks.length} </h1><br><br>` + accounts.tasks.map(task => `<h2>${task.title} : ${task.priority === "LOW" ? "Low Priority" : "High Priority"}</h2>`).join("")
-            }, (error, info) => {
-                if (error) console.log(error);
-                else console.log('Email sent: ' + info.response);
-            });
+            try {
+                await transporter.sendMail({
+                    from: {
+                        name: 'TDOC - Niyas',
+                        address: process.env.EMAIL,
+                    },
+                    to: user.email,
+                    subject: `Tasks Due for ${user.username}`,
+                    text: 'T-Doc Tasks Notification', 
+                    html: `<h1>Tasks Due: ${accounts.tasks.length} </h1><br><br>` + accounts.tasks.map(task => `<h2>${task.title} : ${task.priority === "LOW" ? "Low Priority" : "High Priority"}</h2>`).join("")
+                })
+                console.log("Message sent successfully to" + user.email)
+            } catch (err) {
+                console.log(err)
+            }
         }
     }
     
