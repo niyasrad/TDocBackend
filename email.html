@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;600&display=swap" rel="stylesheet">
+    <title>E-Mail T-DOC</title>
+    <style>
+        .email-full {
+            width: 100% !important;
+            height: 100% !important;
+            font-family: 'Comfortaa', Arial, "Helvetica Neue", Helvetica, sans-serif;
+            background-color: #f3f2f0;
+            vertical-align: middle;
+        }
+
+        .email-half {
+            max-width: 600px;
+            min-width: 600px;
+            background-color: white;
+            vertical-align: middle;
+            margin: auto;
+        }
+
+        tbody {
+            vertical-align: middle;
+        }
+
+        .email-row-top {
+            min-width: 100%;
+        }
+
+        .email-row-main {
+            padding-left: 30px;
+            padding-right: 30px;
+            padding-top: 30px;
+        }
+        .email-row-main-real {
+            padding-left: 30px;
+            padding-right: 30px;
+            border-collapse: separate;
+            border-spacing: 0 3em;
+            width: 100%;
+        }
+
+        .email-row-img {
+            min-width: 100%;
+        }
+
+        .email-heading {
+            min-width: 100%;
+            height: 15px;
+            background: #5C0969;
+        }
+
+        .email-img {
+            text-align: center;
+        }
+
+        .card-main {
+            padding: 10px;
+        }
+
+        .border-card {
+            min-width: 420px;
+            width: 420px;
+            max-height: 373px;
+            background: #FFFFFF;
+            border-radius: 15px;
+            border: 2px solid black;
+        }
+
+        img {
+            width: 200px;
+            height: 200px;
+            vertical-align: middle;
+        }
+        .see {
+            margin-right: 0;
+            margin-left: auto;
+        }
+        .see a{
+            background: #5C0969;
+            border-radius: 12px;
+            width: 150px;
+            line-height: 40px;
+            height: 40px;
+            text-align: center;
+            font-size: 14px;
+            text-decoration: none;
+            color: white;
+            display: block;
+            margin-right: 0;
+            margin-left: auto;
+        }
+        .border-card a {
+            width: 100%;
+            height: 40px;
+            background-color: #5C0969;
+            color: white;
+            border-radius: 12px;
+            text-align: center;
+            line-height: 40px;
+            display: block;
+            font-size: 14px;
+            text-decoration: none;
+        }
+        .the-real-email {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <table class="email-full">
+        <tbody>
+            <tr>
+                <td>
+                    <table class="email-half">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <table class="email-row-img">
+                                        <tbody>
+                                            <tr>
+                                                <td class="email-img">
+                                                    <img
+                                                        src='https://cdn.discordapp.com/attachments/946407954180108328/1088022757587046470/Bold_Italic_Multipurpse_Typography_Logo_Design_Brand_Identity_Clean_Comic_Style_for_Design_Company_6.png' />
+                                                </td>
+
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <table class="email-row-top">
+                                        <tbody>
+                                            <tr>
+                                                <td class="email-heading"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <table class="email-row-main">
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <h3>Greetings, {{user}}!</h3>
+                                                    <p>You have {{number}} task(s) pending to do.</p>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="the-real-email">
+                                    <table class="email-row-main-real">
+                                        <tbody>
+                                            {{#each task}}
+                                            <tr class="cards-space">
+                                                <td>
+                                                    <table class="email-row">
+                                                        <tr>
+                                                            <td class="border-card">
+                                                                <table class="email-row">
+                                                                    <tr>
+                                                                        <td class="card-main">
+                                                                            <h3>{{title}}</h3>
+                                                                            <p>{{description}}</p>
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+
+                                                                <a href="https://t-doc.vercel.app/" target='_blank'>Mark
+                                                                    As Done</a>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            {{/each}}
+                                            <tr>
+                                                <td class="see">
+                                                    <a class="see-more" href="https://t-doc.vercel.app/" target='_blank'>See More</a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+
+</html>

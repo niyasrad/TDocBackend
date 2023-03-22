@@ -30,9 +30,13 @@ app.get('/', async(req, res) => {
 
 const Task = require('./src/models/task')
 const User = require('./src/models/user')
+const fs = require('fs')
+const path = require('path')
+const Handlebars = require('handlebars');
 
-console.log(process.env.EMAIL)
-console.log(process.env.PPWORD)
+const emailTemplatePath = path.join(__dirname, '/email.html');
+const emailTemplate = fs.readFileSync(emailTemplatePath, 'utf-8');
+
 const transporter = nodemailer.createTransport({
     service: 'hotmail', 
     auth : {
@@ -61,7 +65,14 @@ cron.schedule('0 0 * * *', async () => {
     for (accounts of onDueTasks) {
         let user = await User.findById(accounts.accountid)
         if (user){
-            console.log(user)
+            console.log(accounts.tasks)
+            let data = {
+                number: accounts.tasks ? accounts.tasks.length: 0,
+                user: user.username,
+                task: accounts.tasks
+            }
+            const compiledTemplate = Handlebars.compile(emailTemplate);
+            const html = compiledTemplate(data);
             try {
                 await transporter.sendMail({
                     from: {
@@ -71,7 +82,7 @@ cron.schedule('0 0 * * *', async () => {
                     to: user.email,
                     subject: `Tasks Due for ${user.username}`,
                     text: 'T-Doc Tasks Notification', 
-                    html: `<h1>Tasks Due: ${accounts.tasks.length} </h1><br><br>` + accounts.tasks.map(task => `<h2>${task.title} : ${task.priority === "LOW" ? "Low Priority" : "High Priority"}</h2>`).join("")
+                    html: html
                 })
                 console.log("Message sent successfully to" + user.email)
             } catch (err) {
