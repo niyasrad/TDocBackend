@@ -47,7 +47,7 @@ const transporter = nodemailer.createTransport({
     rateLimit: 5000, 
 })
 
-cron.schedule('0 0 * * *', async () => {
+cron.schedule('0 6 * * *', async () => {
     console.log('---------------------');
     console.log('Running Cron Process');
 
