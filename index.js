@@ -56,10 +56,13 @@ cron.schedule('0 0 * * *', async () => {
             $match: { due: { $lte: new Date() }, done: false, bogus: false }
         },
         {
+            $limit: 2
+        },
+        {
             $group: { _id: "$accountid", tasks: { $push: '$$ROOT' }}
         },
         {
-            $project: { _id: 0, accountid:"$_id", tasks: 1 }
+            $project: { _id: 0, accountid:"$_id",  tasks: { $slice: ['$tasks', 2] } }
         }
     ])
     for (accounts of onDueTasks) {
