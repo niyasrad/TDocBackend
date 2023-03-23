@@ -47,16 +47,13 @@ const transporter = nodemailer.createTransport({
     rateLimit: 5000, 
 })
 
-cron.schedule('10 6 * * *', async () => {
+cron.schedule('10 0 * * *', async () => {
     console.log('---------------------');
     console.log('Running Cron Process');
 
     let onDueTasks = await Task.aggregate([
         {
             $match: { due: { $lte: new Date() }, done: false, bogus: false }
-        },
-        {
-            $limit: 2
         },
         {
             $group: { _id: "$accountid", tasks: { $push: '$$ROOT' }}
